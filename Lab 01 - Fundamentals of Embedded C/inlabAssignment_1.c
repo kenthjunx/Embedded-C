@@ -5,10 +5,8 @@ float hour = 0, min = 0, sec = 0;
 int main(){
     printf("Enter hours: ");
     scanf("%f", &hour);
-    // hour = 3.441592654;
     printf("Enter minutes: ");
     scanf("%f", &min);
-    // min = 2.718;
     printf("Enter seconds: ");
     scanf("%f", &sec);
 

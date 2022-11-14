@@ -1,60 +1,95 @@
-#include <stdbool.h>
-#include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 
-#define MAX_SIZE 5
+int main(){
+    
+    /*1. Declare a pointer to a short int and a pointer to a float.*/
+    short int intNum;
+    short *intPtr = &intNum;
+    float floatNum;
+    float *floatPtr = &floatNum;
 
-typedef struct {
-    uint8_t *const buffer;
-    int head;
-    int tail;
-    const int maxlen;
-} ring_bbuf_t;
+    /*2. Of what use is the sizeof() operator?*/
+    /*sizeof() is an operator used to compute the size of the operand in bytes.
+    In the following line of code, sizeof operator gives the size of float in bytes,
+    which is 4 bytes.*/
+    printf("sizeof(float) = %d bytes\n", sizeof(float));
 
-bool push(ring_bbuf_t *, uint8_t);
-bool pop(ring_bbuf_t *, uint8_t);
-bool isFull(ring_bbuf_t *);
-bool isEmpty(ring_bbuf_t *);
-void print(ring_bbuf_t *);
+    /*3. How wide is a pointer to a long int in a 32 bits wide system?*/
+    /**/
 
-int main() {
-    uint8_t arr[MAX_SIZE];
-    ring_bbuf_t buffer = {malloc(sizeof(arr)), -1, -1, MAX_SIZE};
+   
+    float num = 17.6; // address of num is 1000
+    float *p;
+    p = &num;  // value of p pointer is 1000, which is the address of num.
 
-    // print(&buffer);
+    /*4.a. What value is p++?*/
+    // p++; // after post-incrementing, the value of p is (1000 + 1(4 bytes)) = 1004;
+    
+    /*4.b. Define in words what *p and &p mean.*/
+    /*
+    *p could mean one thing depending on the context. First, when declaring a pointer, *p means 
+    a variable named p is being declared as a pointer. Second, when accessing the value of the 
+    variable it is pointing to, * operator should be used. So the following line of code prints 17.6.*/
+    printf("*p = %f\n", *p);
+    /*&p means you are accessing the address of the pointer. So the code below prints 1004.*/
+    printf("&num = %p\t&p = %p\n",&num, &p);
+    
+    /*4.c. Is there a way to determine the values of *p and &p given the info mentioned?*/
+    /*The demonstration above shows how the values *p and &p can be known by printing.*/
 
-    // printf("%s\n",push(&buffer, 1)?"true":"false");
-    // print(&buffer);
-    push(&buffer, 1);
-    // printf("%d\n", buffer.buffer[0]);
-    print(&buffer);
+    long int x = 100;
+    long int *y;
+    long int **z;
+
+    printf("\n&x = %p\n", &x);
+    y = &x; // y = address of x = 8000
+    printf("y = %p\n", y);
+    
+    printf("\n&y = %p\n", &y);
+    z = &y; // z = address of y = 5000
+    printf("z = %p\n", &y);
+
+    printf("\nx = %ld\n", x);
+    x++;    // x = x + 1 = 101
+    printf("x++ = %ld\n", x);
+
+    printf("\nx = %ld\t*y = %ld\n", x, *y);
+    *y = *y++;  // increment y, then assign the value of x (101) to x; only the value of y has changed
+    printf("*y = %ld\n", *y);
+
+    //-------pass-------//
+    printf("\n*z = %p\t&y = %p\n", *z, &y);
+    *z = *z++;  // address of y = address of y + 1(4 bytes) = 5000+1(4)=5004
+    printf("*z = %p\n", *z);
+
+    printf("\n&y = %p\tz = %p\n", &y, z);
+    z++;    // address of y = address of y + 1(4bytes) = 5004 + 1(4) = 5008
+    printf("z++ = %p\n", z);
+
+    /*5. Fill out the memory map after the code has executed.*/
+    /*Map after code executes
+    top     ---------------------
+            |                   |
+            |                   |
+            |                   |
+            |                   |
+            |                   |
+            |                   |
+            ---------------------
+    8000    |   garbage value   | x
+            ---------------------
+            |                   |
+            ---------------------
+    5000    |        8004       | y
+            ---------------------
+            |                   |
+            ---------------------
+    2000    |        5004       | z
+            ---------------------
+            |                   |
+            ---------------------
+    */
+
 
     return 0;
-}
-
-void print(ring_bbuf_t *q) {
-    if (isEmpty(q)) {
-        printf("Queue is empty!\n");
-        return;
-    }
-    for (int i = q->head; i != q->tail; i = (i + 1) % q->maxlen)
-        printf("%d ", q->buffer[i++]);
-}
-
-bool isFull(ring_bbuf_t *q) {
-    return ((q->head == q->tail + 1) ||
-            (q->head == 0 && q->tail == q->maxlen - 1));
-}
-
-bool isEmpty(ring_bbuf_t *q) { return (q->head == -1 && q->tail == -1); }
-
-bool push(ring_bbuf_t *q, uint8_t value) {
-    if (isFull(q)) return false;
-
-    if (q->head == -1) q->head = 0;
-    q->tail = (q->tail + 1) % q->maxlen;
-    q->buffer[q->tail] = value;
-
-    return true;
 }

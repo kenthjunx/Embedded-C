@@ -15,7 +15,9 @@ int main(){
     printf("sizeof(float) = %d bytes\n", sizeof(float));
 
     /*3. How wide is a pointer to a long int in a 32 bits wide system?*/
-    /**/
+    /*A pointer to a short int, means the address of a short int variable can store 2 bytes of value.
+    A system that has 2 bytes as short int is a 32 bit system. Therefore, a long int in a 32 bit wide
+    system is 4 bytes wide.*/
 
    
     float num = 17.6; // address of num is 1000
